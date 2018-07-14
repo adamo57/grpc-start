@@ -1,8 +1,7 @@
-// generate new proto file: protoc -I user/ user/userService.proto --go_out=plugins=grpc:user
-
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -19,8 +18,15 @@ const (
 
 type server struct{}
 
-func (s *server) AddUser(ctx context.Context, in *pb.Info) (*pb.User, error) {
-	return &pb.User{Name: in.Name}, nil
+// AddUser is eventually going to add a user to the DB
+func (s *server) AddUser(ctx context.Context, in *pb.UserInfo) (*pb.AddUserMessage, error) {
+	log.Printf("request recieved: %v", in)
+
+	return &pb.AddUserMessage{Message: fmt.Sprintf("The Users info is: Name: %s, Age: %v, Email: %s", in.Name, in.Age, in.Email)}, nil
+}
+
+func (s *server) DelUser(ctx context.Context, in *pb.Username) (*pb.DelUserMessage, error) {
+	return &pb.DelUserMessage{Message: "Not implemented"}, nil
 }
 
 func main() {
@@ -28,6 +34,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", port)
 	}
+
+	log.Printf("INFO: server listening on %s", port)
+
 	s := grpc.NewServer()
 	pb.RegisterUserServiceServer(s, &server{})
 

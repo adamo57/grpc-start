@@ -1,3 +1,5 @@
+// generate new proto file: protoc -I user/ user/userService.proto --go_out=plugins=grpc:user
+
 syntax = "proto3";
 
 option java_multiple_files = true;
@@ -7,13 +9,24 @@ option java_outer_classname = "UserProto";
 package user;
 
 service UserService { 
-    rpc AddUser (Info) returns (User) {}
+    rpc AddUser (UserInfo) returns (AddUserMessage) {}
+    rpc DelUser (Username) returns (DelUserMessage) {}
 }
 
-message Info {
-    string name = 1;
+message Username {
+    string username = 1;
 }
 
-message User {
+message DelUserMessage {
+    string message = 1;
+}
+
+message UserInfo {
     string name = 1;
+    int32 age = 2;
+    string email = 3;
+}
+
+message AddUserMessage {
+    string message = 1;
 }

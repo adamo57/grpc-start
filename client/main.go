@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	pb "github.com/adamo57/grpc-start/user"
@@ -23,18 +22,26 @@ func main() {
 
 	c := pb.NewUserServiceClient(conn)
 
-	name := "Adam Ouellette"
-	if len(os.Args) > 1 {
-		name = os.Args[1]
+	user := &pb.UserInfo{
+		Name:  "Adam Ouellette",
+		Age:   24,
+		Email: "adamouellette57@gmail.com",
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := c.AddUser(ctx, &pb.Info{Name: name})
+	ar, err := c.AddUser(ctx, user)
 	if err != nil {
 		log.Fatalf("could not add user: %v", err)
 	}
 
-	log.Printf("User: %s", r.Name)
+	log.Printf("Reponse: %s", ar.Message)
+
+	dr, err := c.DelUser(ctx, &pb.Username{Username: "adamo57"})
+	if err != nil {
+		log.Fatalf("could not delete user: %v", err)
+	}
+
+	log.Printf("Repsonse: %s", dr.Message)
 }
