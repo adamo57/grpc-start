@@ -1,5 +1,3 @@
-// generate new proto file: protoc -I user/ user/userService.proto --go_out=plugins=grpc:user
-
 syntax = "proto3";
 
 option java_multiple_files = true;
@@ -8,8 +6,15 @@ option java_outer_classname = "UserProto";
 
 package user;
 
+import "google/api/annotations.proto";
+
 service UserService { 
-    rpc AddUser (UserInfo) returns (AddUserMessage) {}
+    rpc AddUser (UserInfo) returns (AddUserMessage) {
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    }
     rpc DelUser (Username) returns (DelUserMessage) {}
 }
 

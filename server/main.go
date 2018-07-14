@@ -5,9 +5,8 @@ import (
 	"log"
 	"net"
 
-	"golang.org/x/net/context"
-
 	pb "github.com/adamo57/grpc-start/user"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
